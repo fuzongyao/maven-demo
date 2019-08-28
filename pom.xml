@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.fuzongyao.demo</groupId>
+    <artifactId>maven-demo-parent</artifactId>
+    <packaging>pom</packaging>
+    <!-- 必须是 revision 才有效 -->
+    <version>${revision}</version>
+    <modules>
+        <!-- 父项目下的子模块 -->
+        <module>maven-demo-child-dao</module>
+        <module>maven-demo-child-api</module>
+        <module>maven-demo-child-remote</module>
+    </modules>
+
+    <properties>
+        <!-- 属性配置,在这里定义的属性，在其它地方可以通过${property name}来使用 -->
+        <!-- 比如依赖的版本，子模块的版本，都在这里配置，以后升级版本只需修改这里 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <revision>1.0-SNAPSHOT</revision>
+        <child-dao.version>1.0-SNAPSHOT</child-dao.version>
+        <child-api.version>1.0-SNAPSHOT</child-api.version>
+        <child-remote.version>1.0-SNAPSHOT</child-remote.version>
+    </properties>
+
+    <dependencyManagement>
+        <!-- dependencyManagement 标签其实就是用来作 jar 包版本管理的，在这个标签下定义好的依赖，不会马上引入到项目中，而是要配合<dependencies>使用，
+        在它或它的子级下的 dependencies 即可以不指定 version 来引入依赖，从而达到让所有的子项目使用依赖项的统一版本的目的。 -->
+        <dependencies>
+            <dependency>
+                <groupId>cn.fuzongyao.demo</groupId>
+                <artifactId>maven-demo-child-dao</artifactId>
+                <version>${child-dao.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.fuzongyao.demo</groupId>
+                <artifactId>maven-demo-child-api</artifactId>
+                <version>${child-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.fuzongyao.demo</groupId>
+                <artifactId>maven-demo-child-remote</artifactId>
+                <version>${child-remote.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- 真正引入依赖的地方，在父项目中引入的依赖，子模块会自动引入，即便你没有使用到；所以一般父项目只会引入一些公共的依赖 -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- 定义依赖版本时，使用${revision}会导致构建失败，使用 flatten-maven-plugin 解决 -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

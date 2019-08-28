@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>maven-demo-parent</artifactId>
+        <groupId>cn.fuzongyao.demo</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>maven-demo-child-api</artifactId>
+    <version>${child-api.version}</version>
+
+    <properties>
+        <maven.install.skip>true</maven.install.skip>
+        <!-- 不需要发布到远程仓库 -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.fuzongyao.demo</groupId>
+            <artifactId>maven-demo-child-dao</artifactId>
+        </dependency>
+    </dependencies>
+</project>
